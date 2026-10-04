@@ -1,0 +1,513 @@
+
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Ассортиментная аналитика — портфельный кейс</title>
+<style>
+  :root{
+    --bg:#0f241d;
+    --panel:#15342a;
+    --panel2:#193c31;
+    --paper:#f5f7f4;
+    --ink:#14221c;
+    --muted:#6c7a73;
+    --line:#d9e1dc;
+    --green:#3f7c64;
+    --green2:#dcefe5;
+    --lime:#b7dd6d;
+    --yellow:#fff1bf;
+    --orange:#f8dcc5;
+    --red:#f5cccc;
+    --white:#fff;
+    --shadow:0 16px 42px rgba(7,22,17,.16);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:#e9eeea;color:var(--ink);
+    font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  .hero{
+    background:
+      radial-gradient(1000px 430px at 80% -10%, rgba(183,221,109,.20), transparent 58%),
+      linear-gradient(160deg,#0d211a 0%,#123026 58%,#0f241d 100%);
+    color:#fff;padding:54px 0 42px;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+  .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#b7c9c0;font-weight:700}
+  h1{font-size:48px;line-height:1.04;margin:12px 0 18px;max-width:930px}
+  .lead{font-size:20px;line-height:1.5;color:#dce8e2;max-width:900px}
+  .hero-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:18px;margin-top:32px}
+  .hero-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11);border-radius:18px;padding:22px}
+  .hero-card strong{display:block;font-size:28px;margin-bottom:5px}
+  .hero-card span{color:#c9d8d1;font-size:13px}
+  .quote{
+    margin:24px 0 0;padding:18px 20px;border-left:4px solid var(--lime);
+    background:rgba(255,255,255,.06);border-radius:0 14px 14px 0;font-size:18px;line-height:1.5
+  }
+  main{padding:34px 0 64px}
+  .section{margin:0 0 26px}
+  .panel{
+    background:var(--paper);border:1px solid #dde5e0;border-radius:22px;padding:26px;
+    box-shadow:var(--shadow);margin-bottom:22px
+  }
+  .section-title{display:flex;justify-content:space-between;gap:18px;align-items:flex-end;margin-bottom:18px}
+  .section-title h2{font-size:26px;margin:0}
+  .section-title p{margin:0;color:var(--muted);max-width:590px;line-height:1.45}
+  .kicker{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--green);font-weight:800}
+  .business-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .cat{
+    border:1px solid var(--line);border-radius:16px;padding:18px;background:#fff
+  }
+  .cat .name{font-weight:800;font-size:17px}
+  .cat .share{font-size:34px;font-weight:900;margin:10px 0 4px}
+  .cat .small{font-size:12px;color:var(--muted)}
+  .bar{height:8px;background:#edf1ee;border-radius:999px;overflow:hidden;margin-top:12px}
+  .bar > i{display:block;height:100%;background:var(--green);border-radius:999px}
+  .why{
+    display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:14px
+  }
+  .why .box{
+    border-radius:14px;padding:15px;background:#eef4f0;border:1px solid #dce8e1
+  }
+  .why .box b{display:block;font-size:22px;margin-bottom:3px}
+  .why .box span{font-size:12px;color:var(--muted)}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;background:#e4eee8;padding:11px 10px;border-bottom:1px solid #cfdcd4;color:#204136;position:sticky;top:0}
+  td{padding:11px 10px;border-bottom:1px solid #e6ebe8;vertical-align:top}
+  tr:hover td{background:#f8fbf9}
+  .pill{display:inline-block;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:800;white-space:nowrap}
+  .green{background:var(--green2);color:#204d3d}
+  .yellow{background:var(--yellow);color:#735600}
+  .orange{background:var(--orange);color:#8b4300}
+  .red{background:var(--red);color:#8f1818}
+  .muted{color:var(--muted)}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .focus-note{
+    margin-top:14px;padding:14px 16px;background:#123027;color:#e6f0eb;border-radius:14px;
+    display:flex;gap:14px;align-items:flex-start
+  }
+  .focus-note b{color:var(--lime)}
+  .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .tab{
+    border:1px solid #cdd9d2;background:#fff;color:#244337;padding:9px 12px;border-radius:12px;
+    cursor:pointer;font-weight:800;font-size:12px
+  }
+  .tab.active{background:var(--bg);color:#fff;border-color:var(--bg)}
+  .case{display:none}
+  .case.active{display:block}
+  .case-head{display:grid;grid-template-columns:1.25fr .75fr;gap:20px}
+  .case-title h3{font-size:27px;margin:4px 0 9px}
+  .case-title p{line-height:1.55;color:#43554c;margin:0}
+  .metric-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .metric{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
+  .metric b{font-size:22px;display:block}
+  .metric span{font-size:11px;color:var(--muted)}
+  .logic{
+    display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:16px
+  }
+  .logic .step{border-radius:14px;padding:14px;border:1px solid var(--line);background:#fff}
+  .logic small{display:block;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800;margin-bottom:5px}
+  .logic b{font-size:15px}
+  .decision{margin-top:14px;border-radius:15px;padding:16px;background:#eaf3ee;border:1px solid #d6e6dc}
+  .decision strong{display:block;margin-bottom:5px}
+  .matrix-wrap{overflow:auto;border:1px solid var(--line);border-radius:16px;background:#fff}
+  .matrix{min-width:820px}
+  .matrix th,.matrix td{text-align:center}
+  .matrix th:first-child,.matrix td:first-child{text-align:left;position:sticky;left:0;background:#fff;font-weight:800}
+  .cell{border-radius:8px;padding:7px 4px;font-weight:800}
+  .cgreen{background:var(--green2);color:#22503f}
+  .cyellow{background:var(--yellow);color:#735600}
+  .corange{background:var(--orange);color:#8b4300}
+  .cred{background:var(--red);color:#8f1818}
+  .matrix-label{font-size:12px;color:var(--muted);margin:12px 0 8px}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .callout{padding:16px;border-radius:15px;background:#fff;border:1px solid var(--line)}
+  .callout h4{margin:0 0 7px;font-size:15px}
+  .callout p{margin:0;color:#526259;line-height:1.5}
+  details{
+    margin-top:14px;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden
+  }
+  summary{
+    cursor:pointer;padding:14px 16px;font-weight:800;background:#f0f5f2;color:#234238
+  }
+  details .inside{padding:14px 16px}
+  .tiny{font-size:11px;color:var(--muted);line-height:1.45}
+  .footer{
+    background:#10261e;color:#d6e5de;padding:28px 0 36px;margin-top:36px
+  }
+  .footer b{color:#fff}
+  @media(max-width:900px){
+    h1{font-size:38px}
+    .hero-grid,.business-grid,.why,.case-head,.logic,.two-col{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Портфельный кейс · ассортиментная аналитика маркетплейса</div>
+    <h1>Продажи упали после 1 сентября. Это проблема — или мы просто неправильно смотрим?</h1>
+    <div class="lead">
+      Компактный ассортиментный кейс: от структуры бизнеса — к материальным моделям — к цвету и размеру.
+      Не «красим 160 артикул», а объясняем, <b>где результат бизнеса, почему мы смотрим именно туда и что делать дальше</b>.
+    </div>
+
+    <div class="hero-grid">
+      <div class="hero-card">
+        <strong>≈160 карточек</strong>
+        <span>WB · школьная одежда · анонимизированный демо-кейс</span>
+      </div>
+      <div class="hero-card">
+        <strong>3 категории в фокусе</strong>
+        <span>брюки · кардиганы · жилеты</span>
+      </div>
+    </div>
+
+    <div class="quote">
+      <b>Главный вопрос не «почему сентябрь хуже августа».</b><br/>
+      Главный вопрос: <b>мы монетизировали августовский спрос — или часть сезона потеряли из-за наличия, размера, логистики, цены или рекламы?</b>
+    </div>
+  </div>
+</section>
+
+<main>
+<div class="wrap">
+
+  <section class="panel section">
+    <div class="section-title">
+      <div>
+        <div class="kicker">1 · сначала карта бизнеса</div>
+        <h2>На чём вообще держится результат?</h2>
+      </div>
+      <p>Перед тем как разбирать отдельный артикул, нужно понять, какую долю бизнеса он представляет и насколько его движение материально.</p>
+    </div>
+
+    <div class="business-grid">
+      <div class="cat">
+        <div class="name">Брюки</div>
+        <div class="share">43%</div>
+        <div class="small">61 карточка · крупнейшая категория</div>
+        <div class="bar"><i style="width:43%"></i></div>
+      </div>
+      <div class="cat">
+        <div class="name">Кардиганы</div>
+        <div class="share">27%</div>
+        <div class="small">31 карточка · высокий сезонный спрос</div>
+        <div class="bar"><i style="width:27%"></i></div>
+      </div>
+      <div class="cat">
+        <div class="name">Жилеты</div>
+        <div class="share">18%</div>
+        <div class="small">17 карточек · сильный размерный эффект</div>
+        <div class="bar"><i style="width:18%"></i></div>
+      </div>
+      <div class="cat">
+        <div class="name">Остальные</div>
+        <div class="share">12%</div>
+        <div class="small">куртки, обувь и хвост ассортимента</div>
+        <div class="bar"><i style="width:12%"></i></div>
+      </div>
+    </div>
+
+    <div class="why">
+      <div class="box"><b>88%</b><span>продаж приходится на три ключевые группы</span></div>
+      <div class="box"><b>67%</b><span>продаж трёх групп дают 7 моделей в фокусе</span></div>
+      <div class="box"><b>79%</b><span>материального изменения результата объясняют эти же модели</span></div>
+    </div>
+
+    <div class="focus-note">
+      <div><b>Почему дальше только 7 моделей?</b></div>
+      <div>Не потому что они «интересные». Они одновременно материальны по продажам, заметно влияют на изменение результата и/или имеют риск по доступности, рекламе или структуре запаса.</div>
+    </div>
+
+    <details>
+      <summary>Показать первичную структуру категорий</summary>
+      <div class="inside">
+        <table>
+          <thead><tr><th>Категория</th><th>Карточек</th><th>Доля выручки<br><span class="tiny">22.08–20.09</span></th><th>Δ продаж<br><span class="tiny">к 23.07–21.08</span></th><th>Выкуп<br><span class="tiny">22.08–20.09</span></th><th>Комментарий</th></tr></thead>
+          <tbody>
+            <tr><td>Брюки</td><td>61</td><td>43%</td><td>-32%</td><td>44%</td><td>сильный сезонный спад + несколько моделей с аномалией</td></tr>
+            <tr><td>Кардиганы</td><td>31</td><td>27%</td><td>-11%</td><td>50%</td><td>часть моделей растёт против категории — проверяем восстановление продаж после поставок</td></tr>
+            <tr><td>Жилеты</td><td>17</td><td>18%</td><td>-24%</td><td>40%</td><td>сильная зависимость от полноты размерного ряда</td></tr>
+            <tr><td>Остальные</td><td>≈50</td><td>12%</td><td>—</td><td>—</td><td>не являются фокусом этого компактного кейса</td></tr>
+          </tbody>
+        </table>
+        <div class="tiny">Доля продаж и часть внутренних метрик — смоделированный портфельный сценарий. Структура категорий и формат идентификаторов основаны на реальном маркетплейс-ассортименте.</div>
+      </div>
+    </details>
+  </section>
+
+  <section class="panel section">
+    <div class="section-title">
+      <div>
+        <div class="kicker">2 · почему именно эти артикулы</div>
+        <h2>Светофор ключевых моделей</h2>
+      </div>
+      <p>Красный — не «плохой товар». Это модель, где физическое наличие ограничивает реализацию спроса. Оранжевый — экономическая проблема. Зелёный — ситуация объяснима и не требует «лечения».</p>
+    </div>
+
+
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin:-4px 0 16px">
+      <span class="pill green">Текущий период: 22.08–20.09.2026</span>
+      <span class="pill yellow">Сравнение: 23.07–21.08.2026</span>
+      <span class="pill orange">Сезонный пик наличия: август 2026</span>
+    </div>
+
+    <div style="overflow:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>артикул WB</th><th>Категория</th><th>Модель</th><th>Доля в выручке категории<br><span class="tiny">22.08–20.09</span></th><th>Δ продаж<br><span class="tiny">к 23.07–21.08</span></th><th>Выкуп<br><span class="tiny">22.08–20.09</span></th><th>ДРР<br><span class="tiny">22.08–20.09</span></th><th>Маржа после расходов МП<br><span class="tiny">22.08–20.09</span></th><th>Почему в фокусе</th><th>Статус</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="mono">390***634</td><td>Брюки</td><td>На резинке со стрелкой</td><td>13%</td><td>+42%</td><td>43%</td><td>7,8%</td><td>24%</td><td>лидер категории + отсутствие в продаже ходовых размеров в пик</td><td><span class="pill red">КРАСНЫЙ</span></td></tr>
+          <tr><td class="mono">164***507</td><td>Брюки</td><td>Классические</td><td>11%</td><td>-38%</td><td>47%</td><td>8,6%</td><td>22%</td><td>материальный объём, но динамика похожа на сезон</td><td><span class="pill green">ЗЕЛЁНЫЙ</span></td></tr>
+          <tr><td class="mono">649***697</td><td>Брюки</td><td>Для полных на резинке</td><td>4%</td><td>-89%</td><td>54%</td><td>19,6%</td><td>9%</td><td>падение сильнее категории при полном наличии</td><td><span class="pill orange">ОРАНЖЕВЫЙ</span></td></tr>
+          <tr><td class="mono">318***915</td><td>Кардиганы</td><td>На молнии</td><td>9%</td><td>+241%</td><td>49%</td><td>7,1%</td><td>27%</td><td>рост против категории — вероятное восстановление продаж после поставки</td><td><span class="pill red">КРАСНЫЙ</span></td></tr>
+          <tr><td class="mono">649***068</td><td>Кардиганы</td><td>Вязаный на молнии</td><td>16%</td><td>+43%</td><td>46%</td><td>8,3%</td><td>21%</td><td>высокий объём + неполная доступность в пик</td><td><span class="pill orange">ОРАНЖЕВЫЙ</span></td></tr>
+          <tr><td class="mono">670***351</td><td>Жилеты</td><td>На молнии</td><td>19%</td><td>+64%</td><td>38%</td><td>9,4%</td><td>18%</td><td>спрос вырос, но выкуп и размерная доступность слабее нормы</td><td><span class="pill red">КРАСНЫЙ</span></td></tr>
+          <tr><td class="mono">230***874</td><td>Жилеты</td><td>Синий школьный</td><td>17%</td><td>-18%</td><td>39%</td><td>6,9%</td><td>25%</td><td>полный ряд, но капитал в медленных размерах</td><td><span class="pill orange">ОРАНЖЕВЫЙ</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="focus-note" style="margin-bottom:14px">
+      <div><b>Финансовый слой:</b></div>
+      <div>«Маржа после расходов МП» — демонстрационная экономика единицы товара: выручка за вычетом себестоимости, комиссии, логистики, хранения и рекламы. Налог и общехозяйственные расходы здесь не включены.</div>
+    </div>
+
+    <div class="focus-note" style="margin-bottom:14px">
+      <div><b>Как читать периоды:</b></div>
+      <div>Все показатели без отдельной пометки относятся к текущему периоду 22.08–20.09.2026. 
+      «Δ продаж» — изменение к предыдущим 30 дням, 23.07–21.08.2026. 
+      История доступности и отсутствия товара относится к августовскому сезонному пику.</div>
+    </div>
+
+    <div class="focus-note">
+      <div><b>Важная оговорка:</b></div>
+      <div>Падение после сезона подготовки к школе не считается проблемой автоматически. Сигнал появляется только если модель заметно отличается от категории или если есть конкретное ограничение: отсутствие в продаже, цена, реклама, выкуп, качество запаса.</div>
+    </div>
+  </section>
+
+  <section class="panel section">
+    <div class="section-title">
+      <div>
+        <div class="kicker">3 · три расследования</div>
+        <h2>Одинаковый график — разные причины — разные решения</h2>
+      </div>
+      <p>Переключи модель: мы не «объясняем всё одним фактором», а показываем, что меняется управленческий диагноз.</p>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-target="case1">1 · потерянный пик</button>
+      <button class="tab" data-target="case2">2 · нормальная сезонность</button>
+      <button class="tab" data-target="case3">3 · запас есть, но не тот</button>
+    </div>
+
+    <div id="case1" class="case active">
+      <div class="case-head">
+        <div class="case-title">
+          <div class="kicker">артикул WB 390***634 · брюки</div>
+          <h3>Продажи выросли на 42%. Хорошая новость? Не обязательно.</h3>
+          <p>
+            В августовский пик тёмно-синие размеры 140–158 выпадали из наличия на 8–14 дней.
+            Поставка пришла 27 августа, и сегодня ряд почти полный. Поэтому текущий остаток создаёт ложное ощущение,
+            что проблем с наличием не было.
+          </p>
+        </div>
+        <div class="metric-grid">
+          <div class="metric"><b>13%</b><span>доля продаж категории</span></div>
+          <div class="metric"><b>+42%</b><span>динамика заказов</span></div>
+          <div class="metric"><b>61%</b><span>доступность ядра в пик</span></div>
+          <div class="metric"><b>0,92 млн ₽</b><span>модельная потерянная выручка</span></div>
+        </div>
+      </div>
+
+      <div class="logic">
+        <div class="step"><small>Сигнал</small><b>рост после слабого предыдущего периода</b></div>
+        <div class="step"><small>Причина</small><b>восстановление предложения, а не чистый рост спроса</b></div>
+        <div class="step"><small>Решение</small><b>не масштабировать рекламу раньше стабильного ряда</b></div>
+      </div>
+
+      <div class="matrix-label">Текущий запас, дней — после пополнения</div>
+      <div class="matrix-wrap">
+        <table class="matrix">
+          <thead><tr><th>Цвет \ Размер</th><th>128</th><th>134</th><th>140</th><th>146</th><th>152</th><th>158</th><th>164</th><th>170</th><th>176</th><th>182</th></tr></thead>
+          <tbody>
+            <tr><td>Тёмно-синий</td><td><span class="cell cyellow">55</span></td><td><span class="cell cgreen">40</span></td><td><span class="cell cgreen">22</span></td><td><span class="cell cgreen">16</span></td><td><span class="cell cyellow">14</span></td><td><span class="cell cgreen">18</span></td><td><span class="cell cgreen">26</span></td><td><span class="cell cgreen">45</span></td><td><span class="cell cyellow">70</span></td><td><span class="cell corange">90</span></td></tr>
+            <tr><td>Чёрный</td><td><span class="cell cyellow">70</span></td><td><span class="cell cyellow">55</span></td><td><span class="cell cgreen">35</span></td><td><span class="cell cgreen">28</span></td><td><span class="cell cgreen">24</span></td><td><span class="cell cgreen">27</span></td><td><span class="cell cgreen">33</span></td><td><span class="cell cyellow">50</span></td><td><span class="cell corange">85</span></td><td><span class="cell corange">110</span></td></tr>
+            <tr><td>Серый</td><td><span class="cell corange">95</span></td><td><span class="cell corange">80</span></td><td><span class="cell cyellow">60</span></td><td><span class="cell cyellow">50</span></td><td><span class="cell cyellow">48</span></td><td><span class="cell cyellow">52</span></td><td><span class="cell cyellow">65</span></td><td><span class="cell corange">90</span></td><td><span class="cell corange">120</span></td><td><span class="cell corange">150</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="matrix-label">Сколько дней вариант отсутствовал в продаже в сезонный пик</div>
+      <div class="matrix-wrap">
+        <table class="matrix">
+          <thead><tr><th>Цвет \ Размер</th><th>128</th><th>134</th><th>140</th><th>146</th><th>152</th><th>158</th><th>164</th><th>170</th><th>176</th><th>182</th></tr></thead>
+          <tbody>
+            <tr><td>Тёмно-синий</td><td><span class="cell cgreen">2</span></td><td><span class="cell cyellow">4</span></td><td><span class="cell corange">8</span></td><td><span class="cell cred">13</span></td><td><span class="cell cred">14</span></td><td><span class="cell cred">11</span></td><td><span class="cell corange">6</span></td><td><span class="cell cgreen">2</span></td><td><span class="cell cgreen">0</span></td><td><span class="cell cgreen">0</span></td></tr>
+            <tr><td>Чёрный</td><td><span class="cell cgreen">0</span></td><td><span class="cell cgreen">2</span></td><td><span class="cell cyellow">4</span></td><td><span class="cell corange">6</span></td><td><span class="cell corange">8</span></td><td><span class="cell cyellow">5</span></td><td><span class="cell cgreen">2</span></td><td><span class="cell cgreen">0</span></td><td><span class="cell cgreen">0</span></td><td><span class="cell cgreen">0</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="decision">
+        <strong>Решение</strong>
+        Сначала держать тёмно-синие 140–158 в рабочем коридоре 21–35 дней и только после 7–10 дней стабильного наличия масштабировать рекламу. Рост +42% не использовать как доказательство роста спроса — база искажена отсутствием товара.
+      </div>
+    </div>
+
+    <div id="case2" class="case">
+      <div class="case-head">
+        <div class="case-title">
+          <div class="kicker">артикул WB 164***507 · брюки</div>
+          <h3>Продажи упали на 38%. Но здесь, возможно, ничего чинить не надо.</h3>
+          <p>
+            Категория после 1 сентября падает примерно тем же темпом. Размерный ряд был доступен,
+            выкуп стабилен, рекламная нагрузка не ухудшилась. Это похоже не на поломку товара, а на нормальное завершение сезона подготовки к школе.
+          </p>
+        </div>
+        <div class="metric-grid">
+          <div class="metric"><b>11%</b><span>доля категории</span></div>
+          <div class="metric"><b>-38%</b><span>динамика заказов</span></div>
+          <div class="metric"><b>-41%</b><span>динамика категории</span></div>
+          <div class="metric"><b>94%</b><span>доступность ряда</span></div>
+        </div>
+      </div>
+      <div class="logic">
+        <div class="step"><small>Сигнал</small><b>падение объёма</b></div>
+        <div class="step"><small>Проверка</small><b>артикул движется вместе с категорией</b></div>
+        <div class="step"><small>Решение</small><b>не лечить сезонность как проблему</b></div>
+      </div>
+      <div class="two-col" style="margin-top:16px">
+        <div class="callout">
+          <h4>Что НЕ делаем</h4>
+          <p>Не режем цену, не разгоняем рекламу и не увеличиваем закупку только потому, что видим «-38%».</p>
+        </div>
+        <div class="callout">
+          <h4>Что делаем</h4>
+          <p>Снижаем частоту мониторинга и оставляем модель как контрольную: если она начнёт отклоняться от категории, тогда разбираем причину.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="case3" class="case">
+      <div class="case-head">
+        <div class="case-title">
+          <div class="kicker">артикул WB 230***874 · жилеты</div>
+          <h3>Все размеры есть. Но это не значит, что запас хороший.</h3>
+          <p>
+            В ядре спроса тёмно-синего запас рабочий. При этом серый цвет и крайние размеры держат 75–190 дней.
+            На уровне модели всё выглядит «зелёным»: товар есть, реклама окупается, размерный ряд полный.
+            Проблема обнаруживается только после раскрытия цвет × размер.
+          </p>
+        </div>
+        <div class="metric-grid">
+          <div class="metric"><b>17%</b><span>доля категории</span></div>
+          <div class="metric"><b>10/10</b><span>размеров в наличии</span></div>
+          <div class="metric"><b>39%</b><span>капитала в медленных вариантах</span></div>
+          <div class="metric"><b>13%</b><span>доля спроса этих вариантов</span></div>
+        </div>
+      </div>
+
+      <div class="matrix-label">Текущий запас, дней</div>
+      <div class="matrix-wrap">
+        <table class="matrix">
+          <thead><tr><th>Цвет \ Размер</th><th>128</th><th>134</th><th>140</th><th>146</th><th>152</th><th>158</th><th>164</th><th>170</th><th>176</th><th>182</th></tr></thead>
+          <tbody>
+            <tr><td>Тёмно-синий</td><td><span class="cell cyellow">50</span></td><td><span class="cell cgreen">35</span></td><td><span class="cell cgreen">28</span></td><td><span class="cell cgreen">22</span></td><td><span class="cell cgreen">20</span></td><td><span class="cell cgreen">24</span></td><td><span class="cell cgreen">40</span></td><td><span class="cell cyellow">65</span></td><td><span class="cell corange">95</span></td><td><span class="cell corange">120</span></td></tr>
+            <tr><td>Чёрный</td><td><span class="cell cyellow">75</span></td><td><span class="cell cyellow">60</span></td><td><span class="cell cgreen">45</span></td><td><span class="cell cgreen">35</span></td><td><span class="cell cgreen">33</span></td><td><span class="cell cgreen">40</span></td><td><span class="cell cyellow">60</span></td><td><span class="cell corange">90</span></td><td><span class="cell corange">130</span></td><td><span class="cell corange">160</span></td></tr>
+            <tr><td>Серый</td><td><span class="cell corange">110</span></td><td><span class="cell corange">100</span></td><td><span class="cell corange">85</span></td><td><span class="cell cyellow">75</span></td><td><span class="cell cyellow">70</span></td><td><span class="cell corange">80</span></td><td><span class="cell corange">95</span></td><td><span class="cell corange">125</span></td><td><span class="cell corange">160</span></td><td><span class="cell corange">190</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="decision">
+        <strong>Решение</strong>
+        Не увеличивать закупку модели целиком. Следующий заказ считать по размерно-цветовой структуре: поддерживать ядро спроса, замедлить пополнение серого и крайних размеров. Рекламу можно оставить — проблема не в трафике, а в качестве запаса.
+      </div>
+    </div>
+
+    <details>
+      <summary>Показать логику доказательств по трём кейсам</summary>
+      <div class="inside">
+        <table>
+          <thead><tr><th>Гипотеза</th><th>Что должно быть видно</th><th>Что считаем подтверждением</th></tr></thead>
+          <tbody>
+            <tr><td>Выбило ходовые размеры</td><td>отсутствие в продаже в ядре спроса в пик + восстановление после поставки</td><td>рост доступности после даты поставки и восстановление продаж</td></tr>
+            <tr><td>Нормальный сезонный спад</td><td>артикул движется примерно как категория, наличие стабильно</td><td>нет дополнительной аномалии по цене, рекламе, выкупу</td></tr>
+            <tr><td>Запас есть, но не тот</td><td>полный ряд при сильном расхождении доли спроса и доли остатка</td><td>медленные варианты держат непропорционально много капитала</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <section class="panel section">
+    <div class="section-title">
+      <div>
+        <div class="kicker">4 · управленческое решение</div>
+        <h2>Что делаем по итогам анализа</h2>
+      </div>
+      <p>Четыре действия в порядке приоритета: сначала убрать физические ограничения продаж, затем скорректировать запас — и только потом масштабировать спрос.</p>
+    </div>
+
+    <div class="business-grid">
+      <div class="cat"><div class="name">1 · восстановить</div><div class="small">ходовые цвето-размеры, если спрос физически ограничен</div></div>
+      <div class="cat"><div class="name">2 · не лечить</div><div class="small">нормальную сезонность как операционную проблему</div></div>
+      <div class="cat"><div class="name">3 · перестроить</div><div class="small">закупочную матрицу, если деньги сидят в хвосте размеров</div></div>
+      <div class="cat"><div class="name">4 · только потом</div><div class="small">масштабировать рекламу и трафик</div></div>
+    </div>
+
+    <details>
+      <summary>Раскрыть первичку: 7 моделей</summary>
+      <div class="inside" style="overflow:auto">
+        <table>
+          <thead>
+            <tr><th>артикул WB</th><th>Категория</th><th>Продажи, шт.<br><span class="tiny">22.08–20.09</span></th><th>Выкуп<br><span class="tiny">22.08–20.09</span></th><th>ДРР<br><span class="tiny">22.08–20.09</span></th><th>Маржа после расходов МП<br><span class="tiny">22.08–20.09</span></th><th>Доступность в пик<br><span class="tiny">август 2026</span></th><th>Доступность на конец периода<br><span class="tiny">20.09.2026</span></th><th>Отсутствие в продаже, дней<br><span class="tiny">август 2026</span></th><th>Статус</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="mono">390***634</td><td>Брюки</td><td>1 670</td><td>43%</td><td>7,8%</td><td>24%</td><td>61%</td><td>98%</td><td>13</td><td><span class="pill red">КРАСНЫЙ</span></td></tr>
+            <tr><td class="mono">164***507</td><td>Брюки</td><td>2 180</td><td>47%</td><td>8,6%</td><td>22%</td><td>96%</td><td>94%</td><td>1</td><td><span class="pill green">ЗЕЛЁНЫЙ</span></td></tr>
+            <tr><td class="mono">649***697</td><td>Брюки</td><td>125</td><td>54%</td><td>19,6%</td><td>9%</td><td>98%</td><td>99%</td><td>0</td><td><span class="pill orange">ОРАНЖЕВЫЙ</span></td></tr>
+            <tr><td class="mono">318***915</td><td>Кардиганы</td><td>300</td><td>49%</td><td>7,1%</td><td>27%</td><td>42%</td><td>96%</td><td>16</td><td><span class="pill red">КРАСНЫЙ</span></td></tr>
+            <tr><td class="mono">649***068</td><td>Кардиганы</td><td>1 630</td><td>46%</td><td>8,3%</td><td>21%</td><td>73%</td><td>100%</td><td>8</td><td><span class="pill orange">ОРАНЖЕВЫЙ</span></td></tr>
+            <tr><td class="mono">670***351</td><td>Жилеты</td><td>1 190</td><td>38%</td><td>9,4%</td><td>18%</td><td>69%</td><td>96%</td><td>10</td><td><span class="pill red">КРАСНЫЙ</span></td></tr>
+            <tr><td class="mono">230***874</td><td>Жилеты</td><td>1 480</td><td>39%</td><td>6,9%</td><td>25%</td><td>98%</td><td>100%</td><td>0</td><td><span class="pill orange">ОРАНЖЕВЫЙ</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+</div>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <b>Портфельный демо-кейс.</b>
+    Товарная структура и логика маркетплейса основаны на реальном ассортименте; бренд, продавец, ссылки и идентификаторы анонимизированы.
+    Внутренние показатели рекламы, истории остатков, поставок и часть финансовых метрик смоделированы как непротиворечивый сценарий для демонстрации аналитического подхода.
+    <div style="margin-top:12px;color:#a9bbb2;font-size:12px;line-height:1.5">
+      Все персонажи, продавцы и артикулы в публичной версии вымышлены и замаскированы.
+      Любые совпадения с реальными брендами, карточками, складами, поставками и внезапно закончившимися размерами — случайны.
+      Если вы узнали свой размерный ряд, это уже повод открыть аналитику.
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.tab').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.case').forEach(x=>x.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.target).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
